@@ -21,7 +21,7 @@ function patchGradleCompatibility(filePath) {
   if (!fs.existsSync(filePath)) return;
   let content = fs.readFileSync(filePath, 'utf8');
   content = content
-    .replace(/com\.android\.tools\.build:gradle:[0-9.]+/g, 'com.android.tools.build:gradle:8.7.3')
+    .replace(/com\.android\.tools\.build:gradle:[0-9.]+/g, 'com.android.tools.build:gradle:8.10.1')
     .replace(/JavaVersion\.VERSION_21/g, 'JavaVersion.VERSION_17')
     .replace(/:\s*36\b/g, ': 35')
     .replace(/abortOnError\s*=\s*true/g, 'abortOnError = false')
@@ -41,4 +41,4 @@ project(':capacitor-android').projectDir = vendoredCapDir.exists() ? vendoredCap
 `;
 
 fs.writeFileSync(capSettingsPath, capSettingsContent, 'utf8');
-console.log('Synced standalone capacitor-android (AGP 8.7.3 / Gradle 8.9 / SDK 35 / Java 17)');
+console.log('Synced standalone capacitor-android (AGP 8.10.1 / Gradle 8.13 / SDK 35 / Java 17)');
