@@ -7,7 +7,7 @@ on:
 
 jobs:
   build-apk:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
       - name: Checkout repository
@@ -24,8 +24,15 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
+      - name: Ensure Android SDK 35 and accept licenses
+        run: |
+          SDKMANAGER="${ANDROID_HOME:-$ANDROID_SDK_ROOT}/cmdline-tools/latest/bin/sdkmanager"
+          if [ -x "$SDKMANAGER" ]; then
+            yes | "$SDKMANAGER" --licenses >/dev/null 2>&1 || true
+            if [ ! -d "${ANDROID_HOME:-$ANDROID_SDK_ROOT}/platforms/android-35" ]; then
+              yes | "$SDKMANAGER" "platforms;android-35" "build-tools;35.0.0"
+            fi
+          fi
 
       - name: Install dependencies and sync Capacitor Android
         run: |
