@@ -5,6 +5,7 @@ import {
   Briefcase,
   CheckCircle2,
   Heart,
+  Loader2,
   Mail,
   MapPin,
   RefreshCw,
@@ -21,6 +22,10 @@ import {
   Lesson,
   VisualSchema,
 } from '../types/marketup';
+import {
+  IntakeDispatchStatus,
+  sendCourseIntakeEmail,
+} from '../utils/intakeMailer';
 import { ExerciseRunner } from './ExerciseRunner';
 import { MarketupLogo } from './MarketupLogo';
 import { MarkyCoach } from './MarkyCoach';
@@ -186,6 +191,10 @@ export const LessonPlayerModal: React.FC<LessonPlayerModalProps> = ({
   const [email, setEmail] = useState(initialProfile.email);
   const [city, setCity] = useState(initialProfile.city);
   const [formErrors, setFormErrors] = useState<Partial<Record<keyof LearnerProfile, string>>>({});
+  const [isSubmittingIntake, setIsSubmittingIntake] = useState(false);
+  const [intakeDispatchStatus, setIntakeDispatchStatus] = useState<IntakeDispatchStatus | null>(
+    null
+  );
 
   const totalSteps = lesson.exercises.length + 2;
   const currentStep =
@@ -198,8 +207,10 @@ export const LessonPlayerModal: React.FC<LessonPlayerModalProps> = ({
       : totalSteps;
   const progressPct = Math.round((currentStep / totalSteps) * 100);
 
-  const handleSubmitIntake = (e: React.FormEvent) => {
+  const handleSubmitIntake = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isSubmittingIntake) return;
+
     const cleanLast = lastName.trim();
     const cleanFirst = firstName.trim();
     const cleanEmail = email.trim();
@@ -220,14 +231,32 @@ export const LessonPlayerModal: React.FC<LessonPlayerModalProps> = ({
       return;
     }
 
-    setFormErrors({});
-    onSaveLearnerProfile({
+    const profile: LearnerProfile = {
       lastName: cleanLast,
       firstName: cleanFirst,
       email: cleanEmail,
       city: cleanCity,
-    });
-    setPhase(learningMode === 'challenge' ? 'exercises' : 'theory');
+    };
+
+    setFormErrors({});
+    setIsSubmittingIntake(true);
+    onSaveLearnerProfile(profile);
+
+    try {
+      const dispatch = await sendCourseIntakeEmail({
+        profile,
+        lessonId: lesson.id,
+        lessonTitle: lesson.title,
+        domainTitle,
+        chapterTitle,
+        language: lang,
+        submittedAt: new Date().toISOString(),
+      });
+      setIntakeDispatchStatus(dispatch.status);
+    } finally {
+      setIsSubmittingIntake(false);
+      setPhase(learningMode === 'challenge' ? 'exercises' : 'theory');
+    }
   };
 
   const handleExerciseAnswered = (isCorrect: boolean) => {
@@ -302,6 +331,25 @@ export const LessonPlayerModal: React.FC<LessonPlayerModalProps> = ({
         </header>
 
         <div className="flex-1 overflow-y-auto p-5 sm:p-7">
+          {intakeDispatchStatus && phase !== 'intake' && phase !== 'summary' && (
+            <div
+              className={`mb-4 flex items-center gap-2 rounded-xl border px-3.5 py-2 text-xs font-semibold ${
+                intakeDispatchStatus === 'sent'
+                  ? 'border-emerald-200 bg-emerald-50 text-emerald-800'
+                  : 'border-amber-200 bg-amber-50 text-amber-900'
+              }`}
+            >
+              <CheckCircle2 className="h-4 w-4 shrink-0" />
+              <span>
+                {intakeDispatchStatus === 'sent'
+                  ? t.intakeSentBanner
+                  : intakeDispatchStatus === 'needs_activation'
+                  ? t.intakeActivationBanner
+                  : t.intakeQueuedBanner}
+              </span>
+            </div>
+          )}
+
           {t.bilingualNote && phase !== 'summary' && phase !== 'intake' && (
             <p className="mb-4 text-xs font-semibold text-blue-700">
               {t.bilingualNote}
@@ -468,10 +516,20 @@ export const LessonPlayerModal: React.FC<LessonPlayerModalProps> = ({
 
                 <button
                   type="submit"
-                  className="inline-flex min-h-[44px] w-full items-center justify-center gap-2 rounded-2xl border-b-4 border-violet-950 bg-gradient-to-r from-violet-700 to-blue-600 px-6 py-3 text-sm font-extrabold text-white transition-all hover:brightness-110 active:translate-y-0.5 active:border-b-0 sm:w-auto sm:whitespace-nowrap sm:shrink-0"
+                  disabled={isSubmittingIntake}
+                  className="inline-flex min-h-[44px] w-full items-center justify-center gap-2 rounded-2xl border-b-4 border-violet-950 bg-gradient-to-r from-violet-700 to-blue-600 px-6 py-3 text-sm font-extrabold text-white transition-all hover:brightness-110 active:translate-y-0.5 active:border-b-0 disabled:cursor-wait disabled:opacity-80 sm:w-auto sm:whitespace-nowrap sm:shrink-0"
                 >
-                  {t.intakeStartBtn}
-                  <ArrowRight className="h-4 w-4 shrink-0" />
+                  {isSubmittingIntake ? (
+                    <>
+                      <Loader2 className="h-4 w-4 shrink-0 animate-spin" />
+                      {t.intakeSendingBtn}
+                    </>
+                  ) : (
+                    <>
+                      {t.intakeStartBtn}
+                      <ArrowRight className="h-4 w-4 shrink-0" />
+                    </>
+                  )}
                 </button>
               </div>
             </form>

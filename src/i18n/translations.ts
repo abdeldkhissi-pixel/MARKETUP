@@ -144,6 +144,10 @@ export interface UIStrings {
     intakeCityPlaceholder: string;
     intakePrivacyNote: string;
     intakeStartBtn: string;
+    intakeSendingBtn: string;
+    intakeSentBanner: string;
+    intakeQueuedBanner: string;
+    intakeActivationBanner: string;
     intakeErrRequired: string;
     intakeErrEmail: string;
   };
@@ -521,7 +525,7 @@ export const UI_TEXT: Record<Language, UIStrings> = {
       intakeBadge: 'Inscription au cours',
       intakeTitle: 'Avant de commencer ce cours',
       intakeSubtitle:
-        'Renseignez vos informations pour personnaliser ce cours et vos certificats de réussite.',
+        'Renseignez vos informations : elles personnalisent ce cours et sont transmises directement au responsable pédagogique.',
       intakeLastNameLabel: 'Nom',
       intakeLastNamePlaceholder: 'Ex. Benali',
       intakeFirstNameLabel: 'Prénom',
@@ -531,8 +535,14 @@ export const UI_TEXT: Record<Language, UIStrings> = {
       intakeCityLabel: 'Ville',
       intakeCityPlaceholder: 'Ex. Casablanca, Paris, Lyon…',
       intakePrivacyNote:
-        'Enregistré localement sur votre appareil, sans compte ni partage externe.',
+        'Envoyé directement à abdel.dkhissi@edu.umi.ac.ma et mémorisé localement sur votre appareil.',
       intakeStartBtn: 'Commencer le cours',
+      intakeSendingBtn: 'Envoi en cours…',
+      intakeSentBanner: 'Informations envoyées à abdel.dkhissi@edu.umi.ac.ma',
+      intakeQueuedBanner:
+        'Hors ligne : vos informations seront envoyées automatiquement à abdel.dkhissi@edu.umi.ac.ma dès la reconnexion.',
+      intakeActivationBanner:
+        'Première utilisation : confirmez le lien d’activation envoyé sur abdel.dkhissi@edu.umi.ac.ma.',
       intakeErrRequired: 'Ce champ est obligatoire.',
       intakeErrEmail: 'Veuillez saisir une adresse email valide.',
     },
@@ -973,7 +983,7 @@ export const UI_TEXT: Record<Language, UIStrings> = {
       intakeBadge: 'Course Check-In',
       intakeTitle: 'Before starting this course',
       intakeSubtitle:
-        'Enter your details to personalize this lesson and your completion certificates.',
+        'Enter your details: they personalize this lesson and are sent directly to the course coordinator.',
       intakeLastNameLabel: 'Last name',
       intakeLastNamePlaceholder: 'e.g. Smith',
       intakeFirstNameLabel: 'First name',
@@ -983,8 +993,14 @@ export const UI_TEXT: Record<Language, UIStrings> = {
       intakeCityLabel: 'City',
       intakeCityPlaceholder: 'e.g. London, Paris, Montreal…',
       intakePrivacyNote:
-        'Saved locally on your device only — no account or external sharing.',
+        'Sent directly to abdel.dkhissi@edu.umi.ac.ma and saved locally on your device.',
       intakeStartBtn: 'Start Course',
+      intakeSendingBtn: 'Sending…',
+      intakeSentBanner: 'Details sent to abdel.dkhissi@edu.umi.ac.ma',
+      intakeQueuedBanner:
+        'Offline mode: your details will be sent automatically to abdel.dkhissi@edu.umi.ac.ma once back online.',
+      intakeActivationBanner:
+        'First-time setup: click the activation link sent to abdel.dkhissi@edu.umi.ac.ma.',
       intakeErrRequired: 'This field is required.',
       intakeErrEmail: 'Please enter a valid email address.',
     },

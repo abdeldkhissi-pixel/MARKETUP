@@ -31,6 +31,7 @@ import {
   SkillLevel,
   UserProgress,
 } from './types/marketup';
+import { flushPendingCourseIntakes } from './utils/intakeMailer';
 import {
   addXpAndEvaluate,
   createInitialProgress,
@@ -104,6 +105,15 @@ export default function App() {
     const timer = window.setTimeout(() => setToast(null), 5000);
     return () => window.clearTimeout(timer);
   }, [toast]);
+
+  useEffect(() => {
+    void flushPendingCourseIntakes();
+    const handleOnline = () => {
+      void flushPendingCourseIntakes();
+    };
+    window.addEventListener('online', handleOnline);
+    return () => window.removeEventListener('online', handleOnline);
+  }, []);
 
   const showCelebration = (payload: CelebrationPayload) => {
     setToast(payload);
