@@ -3,7 +3,6 @@ import {
   Award,
   BarChart3,
   BookMarked,
-  Compass,
   Flame,
   Globe,
   Home,
@@ -26,6 +25,7 @@ import {
   Domain,
   ExamResult,
   Language,
+  LearnerProfile,
   Lesson,
   NavTab,
   SkillLevel,
@@ -52,6 +52,7 @@ import { HomeView } from './components/HomeView';
 import { LearningPathView } from './components/LearningPathView';
 import { LevelTestModal } from './components/LevelTestModal';
 import { LessonPlayerModal } from './components/LessonPlayerModal';
+import { MarketupLogo } from './components/MarketupLogo';
 import { ProgressView } from './components/ProgressView';
 import { RewardsView } from './components/RewardsView';
 import { SimulatorsView } from './components/SimulatorsView';
@@ -478,9 +479,7 @@ export default function App() {
                     onClick={() => setActiveTab('home')}
                     className="flex items-center gap-2.5 text-left"
                   >
-                    <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-violet-700 to-blue-600 text-amber-300 shadow-xs">
-                      <Compass className="h-5 w-5" />
-                    </div>
+                    <MarketupLogo className="h-9 w-9 shadow-xs" />
                     <div>
                       <p className="font-display text-lg font-extrabold tracking-tight text-violet-950">
                         MARKETUP
@@ -581,8 +580,9 @@ export default function App() {
                   setMobileMenuOpen(false);
                   setActiveTab('home');
                 }}
-                className="font-display text-base font-extrabold text-violet-950 whitespace-nowrap shrink-0 sm:text-lg"
+                className="flex items-center gap-1.5 font-display text-base font-extrabold text-violet-950 whitespace-nowrap shrink-0 sm:text-lg"
               >
+                <MarketupLogo size="xs" className="shadow-xs" />
                 MARKETUP
               </button>
               <div className="flex items-center gap-2 text-xs font-bold shrink-0">
@@ -834,6 +834,14 @@ export default function App() {
             hearts={progress.hearts}
             alreadyCompleted={progress.completedLessonIds.includes(activeLesson.id)}
             lang={lang}
+            initialProfile={progress.learnerProfile}
+            onSaveLearnerProfile={(profile: LearnerProfile) =>
+              setProgress((prev) => ({
+                ...prev,
+                learnerProfile: profile,
+                learnerName: `${profile.firstName} ${profile.lastName}`.trim(),
+              }))
+            }
             onLoseHeart={() =>
               setProgress((prev) => ({
                 ...prev,

@@ -1,8 +1,9 @@
 import React from 'react';
-import { Award, Download, Printer, X } from 'lucide-react';
+import { Download, Printer, X } from 'lucide-react';
 import { getDomainLocalized } from '../i18n/domainTranslations';
 import { UI_TEXT } from '../i18n/translations';
 import { Domain, ExamResult, Language } from '../types/marketup';
+import { MarketupLogo } from './MarketupLogo';
 
 interface CertificateModalProps {
   domain: Domain;
@@ -41,18 +42,26 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({
     const safeDomain = loc.title.replace(/[<>&"']/g, '');
     const svg = `<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="840" viewBox="0 0 1200 840">
-  <rect width="1200" height="840" fill="#f8fafc"/>
+      <rect width="1200" height="840" fill="#f8fafc"/>
   <rect x="36" y="36" width="1128" height="768" rx="28" fill="#ffffff" stroke="#6d28d9" stroke-width="6"/>
   <rect x="56" y="56" width="1088" height="728" rx="20" fill="none" stroke="#f59e0b" stroke-width="3"/>
-  <text x="600" y="140" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#2563eb" letter-spacing="4">${t.brandLine}</text>
-  <text x="600" y="215" text-anchor="middle" font-family="Arial, sans-serif" font-size="44" font-weight="bold" fill="#0f172a">${t.heading.toUpperCase()}</text>
-  <text x="600" y="295" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" fill="#475569">${t.certifiesThat}</text>
-  <text x="600" y="370" text-anchor="middle" font-family="Arial, sans-serif" font-size="44" font-weight="bold" fill="#5b21b6">${safeName}</text>
-  <line x1="300" y1="395" x2="900" y2="395" stroke="#cbd5e1" stroke-width="2"/>
-  <text x="600" y="460" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" fill="#475569">${t.completedLine}</text>
-  <text x="600" y="520" text-anchor="middle" font-family="Arial, sans-serif" font-size="34" font-weight="bold" fill="#0f172a">${safeDomain}</text>
-  <text x="600" y="600" text-anchor="middle" font-family="Arial, sans-serif" font-size="26" font-weight="bold" fill="#2563eb">${t.finalScore(examResult.score)}</text>
-  <text x="600" y="695" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" fill="#64748b">${t.issuedOn(formattedDate)}</text>
+  <g transform="translate(568, 74) scale(1)">
+    <rect x="2" y="2" width="60" height="60" rx="16" fill="#5b21b6"/>
+    <rect x="13" y="37" width="8" height="14" rx="3" fill="#38bdf8"/>
+    <rect x="26" y="30" width="8" height="21" rx="3" fill="#34d399"/>
+    <rect x="39" y="22" width="8" height="29" rx="3" fill="#fbbf24"/>
+    <path d="M12 31L22 21L30 28L47 13" stroke="#ffffff" stroke-width="4.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    <path d="M38.5 12.5H48.5V22.5" stroke="#fde047" stroke-width="4.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  </g>
+  <text x="600" y="166" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#2563eb" letter-spacing="4">${t.brandLine}</text>
+  <text x="600" y="232" text-anchor="middle" font-family="Arial, sans-serif" font-size="44" font-weight="bold" fill="#0f172a">${t.heading.toUpperCase()}</text>
+  <text x="600" y="305" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" fill="#475569">${t.certifiesThat}</text>
+  <text x="600" y="378" text-anchor="middle" font-family="Arial, sans-serif" font-size="44" font-weight="bold" fill="#5b21b6">${safeName}</text>
+  <line x1="300" y1="402" x2="900" y2="402" stroke="#cbd5e1" stroke-width="2"/>
+  <text x="600" y="465" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" fill="#475569">${t.completedLine}</text>
+  <text x="600" y="525" text-anchor="middle" font-family="Arial, sans-serif" font-size="34" font-weight="bold" fill="#0f172a">${safeDomain}</text>
+  <text x="600" y="605" text-anchor="middle" font-family="Arial, sans-serif" font-size="26" font-weight="bold" fill="#2563eb">${t.finalScore(examResult.score)}</text>
+  <text x="600" y="698" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" fill="#64748b">${t.issuedOn(formattedDate)}</text>
 </svg>`;
 
     const blob = new Blob([svg], { type: 'image/svg+xml;charset=utf-8' });
@@ -124,8 +133,8 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({
 
           <div className="print-only-certificate rounded-3xl border-4 border-violet-700 bg-white p-8 text-center">
             <div className="rounded-2xl border-2 border-amber-400 bg-gradient-to-b from-violet-50/40 to-white p-6 sm:p-10">
-              <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-violet-700 to-blue-600 text-amber-300 shadow-sm">
-                <Award className="h-7 w-7" />
+              <div className="mx-auto flex justify-center">
+                <MarketupLogo size="lg" className="shadow-sm" />
               </div>
 
               <p className="mt-4 text-xs font-extrabold uppercase tracking-[0.2em] text-blue-700">

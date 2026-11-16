@@ -194,6 +194,13 @@ export interface ExamResult {
   toReviewNotions: string[];
 }
 
+export interface LearnerProfile {
+  lastName: string;
+  firstName: string;
+  email: string;
+  city: string;
+}
+
 export interface UserProgress {
   xp: number;
   dailyGoalXp: number;
@@ -217,5 +224,6 @@ export interface UserProgress {
   history: ActivityHistoryItem[];
   xpHistoryByDay: Record<string, number>;
   learnerName: string;
+  learnerProfile: LearnerProfile;
   language: Language;
 }

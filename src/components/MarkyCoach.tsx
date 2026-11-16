@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { Compass } from 'lucide-react';
 import mascotMarkyImg from '../assets/images/mascot_marky_1794665219034.jpg';
 import { UI_TEXT } from '../i18n/translations';
 import { Language } from '../types/marketup';
+import { MarketupLogo } from './MarketupLogo';
 
 export type MarkyMood = 'welcome' | 'tip' | 'celebrate' | 'encourage';
 
@@ -58,7 +58,7 @@ export const MarkyCoach: React.FC<MarkyCoachProps> = ({
             className="h-full w-full object-cover"
           />
         ) : (
-          <Compass className="h-7 w-7 text-violet-700" aria-hidden="true" />
+          <MarketupLogo size="sm" />
         )}
       </div>
       <div className="min-w-0 flex-1">

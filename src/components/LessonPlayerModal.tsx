@@ -5,13 +5,24 @@ import {
   Briefcase,
   CheckCircle2,
   Heart,
+  Mail,
+  MapPin,
   RefreshCw,
+  ShieldCheck,
   Sparkles,
+  User,
   X,
 } from 'lucide-react';
 import { UI_TEXT } from '../i18n/translations';
-import { Language, LearningMode, Lesson, VisualSchema } from '../types/marketup';
+import {
+  Language,
+  LearnerProfile,
+  LearningMode,
+  Lesson,
+  VisualSchema,
+} from '../types/marketup';
 import { ExerciseRunner } from './ExerciseRunner';
+import { MarketupLogo } from './MarketupLogo';
 import { MarkyCoach } from './MarkyCoach';
 
 interface LessonPlayerModalProps {
@@ -23,6 +34,8 @@ interface LessonPlayerModalProps {
   hearts: number;
   alreadyCompleted: boolean;
   lang: Language;
+  initialProfile: LearnerProfile;
+  onSaveLearnerProfile: (profile: LearnerProfile) => void;
   onLoseHeart: () => void;
   onRechargeHearts: () => void;
   onAnswerXp: (xp: number) => void;
@@ -152,6 +165,8 @@ export const LessonPlayerModal: React.FC<LessonPlayerModalProps> = ({
   hearts,
   alreadyCompleted,
   lang,
+  initialProfile,
+  onSaveLearnerProfile,
   onLoseHeart,
   onRechargeHearts,
   onAnswerXp,
@@ -161,17 +176,59 @@ export const LessonPlayerModal: React.FC<LessonPlayerModalProps> = ({
   nextLesson,
 }) => {
   const t = UI_TEXT[lang].lessonPlayer;
-  const [phase, setPhase] = useState<'theory' | 'exercises' | 'summary'>(
-    learningMode === 'challenge' ? 'exercises' : 'theory'
-  );
+  const [phase, setPhase] = useState<'intake' | 'theory' | 'exercises' | 'summary'>('intake');
   const [exIndex, setExIndex] = useState(0);
   const [correctCount, setCorrectCount] = useState(0);
   const [showTheoryPeek, setShowTheoryPeek] = useState(false);
 
-  const totalSteps = lesson.exercises.length + 1;
+  const [lastName, setLastName] = useState(initialProfile.lastName);
+  const [firstName, setFirstName] = useState(initialProfile.firstName);
+  const [email, setEmail] = useState(initialProfile.email);
+  const [city, setCity] = useState(initialProfile.city);
+  const [formErrors, setFormErrors] = useState<Partial<Record<keyof LearnerProfile, string>>>({});
+
+  const totalSteps = lesson.exercises.length + 2;
   const currentStep =
-    phase === 'theory' ? 1 : phase === 'exercises' ? exIndex + 2 : totalSteps;
+    phase === 'intake'
+      ? 1
+      : phase === 'theory'
+      ? 2
+      : phase === 'exercises'
+      ? exIndex + 3
+      : totalSteps;
   const progressPct = Math.round((currentStep / totalSteps) * 100);
+
+  const handleSubmitIntake = (e: React.FormEvent) => {
+    e.preventDefault();
+    const cleanLast = lastName.trim();
+    const cleanFirst = firstName.trim();
+    const cleanEmail = email.trim();
+    const cleanCity = city.trim();
+
+    const errors: Partial<Record<keyof LearnerProfile, string>> = {};
+    if (!cleanLast) errors.lastName = t.intakeErrRequired;
+    if (!cleanFirst) errors.firstName = t.intakeErrRequired;
+    if (!cleanEmail) {
+      errors.email = t.intakeErrRequired;
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail)) {
+      errors.email = t.intakeErrEmail;
+    }
+    if (!cleanCity) errors.city = t.intakeErrRequired;
+
+    if (Object.keys(errors).length > 0) {
+      setFormErrors(errors);
+      return;
+    }
+
+    setFormErrors({});
+    onSaveLearnerProfile({
+      lastName: cleanLast,
+      firstName: cleanFirst,
+      email: cleanEmail,
+      city: cleanCity,
+    });
+    setPhase(learningMode === 'challenge' ? 'exercises' : 'theory');
+  };
 
   const handleExerciseAnswered = (isCorrect: boolean) => {
     if (isCorrect) {
@@ -233,7 +290,9 @@ export const LessonPlayerModal: React.FC<LessonPlayerModalProps> = ({
               />
             </div>
             <span className="font-mono-num text-xs font-bold text-slate-600">
-              {phase === 'theory'
+              {phase === 'intake'
+                ? t.intakeBadge
+                : phase === 'theory'
                 ? t.sheetBadge
                 : phase === 'exercises'
                 ? t.exerciseCounter(exIndex + 1, lesson.exercises.length)
@@ -243,10 +302,179 @@ export const LessonPlayerModal: React.FC<LessonPlayerModalProps> = ({
         </header>
 
         <div className="flex-1 overflow-y-auto p-5 sm:p-7">
-          {t.bilingualNote && phase !== 'summary' && (
+          {t.bilingualNote && phase !== 'summary' && phase !== 'intake' && (
             <p className="mb-4 text-xs font-semibold text-blue-700">
               {t.bilingualNote}
             </p>
+          )}
+
+          {phase === 'intake' && (
+            <form onSubmit={handleSubmitIntake} noValidate className="space-y-5">
+              <div className="flex items-start gap-3.5 rounded-2xl border-2 border-violet-200 bg-gradient-to-r from-violet-50 via-white to-sky-50 p-4">
+                <MarketupLogo size="md" className="shadow-xs" />
+                <div className="min-w-0">
+                  <p className="text-[11px] font-extrabold uppercase tracking-wider text-violet-700">
+                    {t.intakeBadge}
+                  </p>
+                  <h3 className="font-display mt-0.5 text-lg font-extrabold text-slate-950">
+                    {t.intakeTitle}
+                  </h3>
+                  <p className="mt-1 text-xs leading-relaxed text-slate-600 sm:text-sm">
+                    {t.intakeSubtitle}
+                  </p>
+                </div>
+              </div>
+
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div>
+                  <label
+                    htmlFor="course-intake-lastname"
+                    className="mb-1.5 flex items-center gap-1.5 text-xs font-extrabold text-slate-800"
+                  >
+                    <User className="h-3.5 w-3.5 text-violet-600" />
+                    {t.intakeLastNameLabel} <span className="text-rose-600">*</span>
+                  </label>
+                  <input
+                    id="course-intake-lastname"
+                    type="text"
+                    autoComplete="family-name"
+                    value={lastName}
+                    onChange={(e) => {
+                      setLastName(e.target.value);
+                      if (formErrors.lastName) {
+                        setFormErrors((prev) => ({ ...prev, lastName: undefined }));
+                      }
+                    }}
+                    placeholder={t.intakeLastNamePlaceholder}
+                    className={`min-h-[44px] w-full rounded-xl border-2 px-3.5 py-2.5 text-sm font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none ${
+                      formErrors.lastName
+                        ? 'border-rose-400 bg-rose-50/40 focus:border-rose-500'
+                        : 'border-slate-200 bg-white focus:border-violet-600'
+                    }`}
+                  />
+                  {formErrors.lastName && (
+                    <p className="mt-1 text-xs font-semibold text-rose-600">
+                      {formErrors.lastName}
+                    </p>
+                  )}
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="course-intake-firstname"
+                    className="mb-1.5 flex items-center gap-1.5 text-xs font-extrabold text-slate-800"
+                  >
+                    <User className="h-3.5 w-3.5 text-blue-600" />
+                    {t.intakeFirstNameLabel} <span className="text-rose-600">*</span>
+                  </label>
+                  <input
+                    id="course-intake-firstname"
+                    type="text"
+                    autoComplete="given-name"
+                    value={firstName}
+                    onChange={(e) => {
+                      setFirstName(e.target.value);
+                      if (formErrors.firstName) {
+                        setFormErrors((prev) => ({ ...prev, firstName: undefined }));
+                      }
+                    }}
+                    placeholder={t.intakeFirstNamePlaceholder}
+                    className={`min-h-[44px] w-full rounded-xl border-2 px-3.5 py-2.5 text-sm font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none ${
+                      formErrors.firstName
+                        ? 'border-rose-400 bg-rose-50/40 focus:border-rose-500'
+                        : 'border-slate-200 bg-white focus:border-violet-600'
+                    }`}
+                  />
+                  {formErrors.firstName && (
+                    <p className="mt-1 text-xs font-semibold text-rose-600">
+                      {formErrors.firstName}
+                    </p>
+                  )}
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="course-intake-email"
+                    className="mb-1.5 flex items-center gap-1.5 text-xs font-extrabold text-slate-800"
+                  >
+                    <Mail className="h-3.5 w-3.5 text-emerald-600" />
+                    {t.intakeEmailLabel} <span className="text-rose-600">*</span>
+                  </label>
+                  <input
+                    id="course-intake-email"
+                    type="email"
+                    inputMode="email"
+                    autoComplete="email"
+                    value={email}
+                    onChange={(e) => {
+                      setEmail(e.target.value);
+                      if (formErrors.email) {
+                        setFormErrors((prev) => ({ ...prev, email: undefined }));
+                      }
+                    }}
+                    placeholder={t.intakeEmailPlaceholder}
+                    className={`min-h-[44px] w-full rounded-xl border-2 px-3.5 py-2.5 text-sm font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none ${
+                      formErrors.email
+                        ? 'border-rose-400 bg-rose-50/40 focus:border-rose-500'
+                        : 'border-slate-200 bg-white focus:border-violet-600'
+                    }`}
+                  />
+                  {formErrors.email && (
+                    <p className="mt-1 text-xs font-semibold text-rose-600">
+                      {formErrors.email}
+                    </p>
+                  )}
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="course-intake-city"
+                    className="mb-1.5 flex items-center gap-1.5 text-xs font-extrabold text-slate-800"
+                  >
+                    <MapPin className="h-3.5 w-3.5 text-amber-600" />
+                    {t.intakeCityLabel} <span className="text-rose-600">*</span>
+                  </label>
+                  <input
+                    id="course-intake-city"
+                    type="text"
+                    autoComplete="address-level2"
+                    value={city}
+                    onChange={(e) => {
+                      setCity(e.target.value);
+                      if (formErrors.city) {
+                        setFormErrors((prev) => ({ ...prev, city: undefined }));
+                      }
+                    }}
+                    placeholder={t.intakeCityPlaceholder}
+                    className={`min-h-[44px] w-full rounded-xl border-2 px-3.5 py-2.5 text-sm font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none ${
+                      formErrors.city
+                        ? 'border-rose-400 bg-rose-50/40 focus:border-rose-500'
+                        : 'border-slate-200 bg-white focus:border-violet-600'
+                    }`}
+                  />
+                  {formErrors.city && (
+                    <p className="mt-1 text-xs font-semibold text-rose-600">
+                      {formErrors.city}
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              <div className="flex flex-col gap-3 border-t border-slate-100 pt-4 sm:flex-row sm:items-center sm:justify-between">
+                <p className="flex items-center gap-1.5 text-xs font-medium text-slate-500">
+                  <ShieldCheck className="h-4 w-4 shrink-0 text-emerald-600" />
+                  <span>{t.intakePrivacyNote}</span>
+                </p>
+
+                <button
+                  type="submit"
+                  className="inline-flex min-h-[44px] w-full items-center justify-center gap-2 rounded-2xl border-b-4 border-violet-950 bg-gradient-to-r from-violet-700 to-blue-600 px-6 py-3 text-sm font-extrabold text-white transition-all hover:brightness-110 active:translate-y-0.5 active:border-b-0 sm:w-auto sm:whitespace-nowrap sm:shrink-0"
+                >
+                  {t.intakeStartBtn}
+                  <ArrowRight className="h-4 w-4 shrink-0" />
+                </button>
+              </div>
+            </form>
           )}
 
           {phase === 'theory' && (

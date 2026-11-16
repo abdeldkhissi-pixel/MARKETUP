@@ -39,18 +39,17 @@ public class SystemBars extends Plugin {
     // https://issues.chromium.org/issues/40699457
     private static final int WEBVIEW_VERSION_WITH_SAFE_AREA_FIX = 140;
 
-    static final String viewportMetaJSFunction = """
-    function capacitorSystemBarsCheckMetaViewport() {
-        const meta = document.querySelectorAll("meta[name=viewport]");
-        if (meta.length == 0) {
-            return false;
-        }
-        // get the last found meta viewport tag
-        const metaContent = meta[meta.length - 1].content;
-        return metaContent.includes("viewport-fit=cover");
-    }
-    capacitorSystemBarsCheckMetaViewport();
-    """;
+    static final String viewportMetaJSFunction =
+        "function capacitorSystemBarsCheckMetaViewport() {\n" +
+        "    const meta = document.querySelectorAll(\"meta[name=viewport]\");\n" +
+        "    if (meta.length == 0) {\n" +
+        "        return false;\n" +
+        "    }\n" +
+        "    // get the last found meta viewport tag\n" +
+        "    const metaContent = meta[meta.length - 1].content;\n" +
+        "    return metaContent.includes(\"viewport-fit=cover\");\n" +
+        "}\n" +
+        "capacitorSystemBarsCheckMetaViewport();";
 
     private String insetsHandling = INSETS_HANDLING_CSS;
     private boolean hasViewportCover = false;
@@ -279,14 +278,12 @@ public class SystemBars extends Plugin {
             if (bridge != null && bridge.getWebView() != null) {
                 String script = String.format(
                     Locale.US,
-                    """
-                    try {
-                      document.documentElement.style.setProperty("--safe-area-inset-top", "%dpx");
-                      document.documentElement.style.setProperty("--safe-area-inset-right", "%dpx");
-                      document.documentElement.style.setProperty("--safe-area-inset-bottom", "%dpx");
-                      document.documentElement.style.setProperty("--safe-area-inset-left", "%dpx");
-                    } catch(e) { console.error('Error injecting safe area CSS:', e); }
-                    """,
+                    "try {\n" +
+                    "  document.documentElement.style.setProperty(\"--safe-area-inset-top\", \"%dpx\");\n" +
+                    "  document.documentElement.style.setProperty(\"--safe-area-inset-right\", \"%dpx\");\n" +
+                    "  document.documentElement.style.setProperty(\"--safe-area-inset-bottom\", \"%dpx\");\n" +
+                    "  document.documentElement.style.setProperty(\"--safe-area-inset-left\", \"%dpx\");\n" +
+                    "} catch(e) { console.error('Error injecting safe area CSS:', e); }",
                     (int) topPx,
                     (int) rightPx,
                     (int) bottomPx,

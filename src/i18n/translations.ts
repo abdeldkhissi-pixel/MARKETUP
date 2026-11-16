@@ -131,6 +131,21 @@ export interface UIStrings {
     backToPath: string;
     nextLessonBtn: (title: string) => string;
     bilingualNote: string;
+    intakeBadge: string;
+    intakeTitle: string;
+    intakeSubtitle: string;
+    intakeLastNameLabel: string;
+    intakeLastNamePlaceholder: string;
+    intakeFirstNameLabel: string;
+    intakeFirstNamePlaceholder: string;
+    intakeEmailLabel: string;
+    intakeEmailPlaceholder: string;
+    intakeCityLabel: string;
+    intakeCityPlaceholder: string;
+    intakePrivacyNote: string;
+    intakeStartBtn: string;
+    intakeErrRequired: string;
+    intakeErrEmail: string;
   };
   exercise: {
     labelPrefix: string;
@@ -503,6 +518,23 @@ export const UI_TEXT: Record<Language, UIStrings> = {
       backToPath: 'Retour au parcours',
       nextLessonBtn: (title) => `Leçon suivante : ${title}`,
       bilingualNote: '',
+      intakeBadge: 'Inscription au cours',
+      intakeTitle: 'Avant de commencer ce cours',
+      intakeSubtitle:
+        'Renseignez vos informations pour personnaliser ce cours et vos certificats de réussite.',
+      intakeLastNameLabel: 'Nom',
+      intakeLastNamePlaceholder: 'Ex. Benali',
+      intakeFirstNameLabel: 'Prénom',
+      intakeFirstNamePlaceholder: 'Ex. Salma',
+      intakeEmailLabel: 'Adresse email',
+      intakeEmailPlaceholder: 'exemple@email.com',
+      intakeCityLabel: 'Ville',
+      intakeCityPlaceholder: 'Ex. Casablanca, Paris, Lyon…',
+      intakePrivacyNote:
+        'Enregistré localement sur votre appareil, sans compte ni partage externe.',
+      intakeStartBtn: 'Commencer le cours',
+      intakeErrRequired: 'Ce champ est obligatoire.',
+      intakeErrEmail: 'Veuillez saisir une adresse email valide.',
     },
     exercise: {
       labelPrefix: 'Exercice',
@@ -938,6 +970,23 @@ export const UI_TEXT: Record<Language, UIStrings> = {
       nextLessonBtn: (title) => `Next lesson: ${title}`,
       bilingualNote:
         'English interface active · Course case text is presented in its original French curriculum edition.',
+      intakeBadge: 'Course Check-In',
+      intakeTitle: 'Before starting this course',
+      intakeSubtitle:
+        'Enter your details to personalize this lesson and your completion certificates.',
+      intakeLastNameLabel: 'Last name',
+      intakeLastNamePlaceholder: 'e.g. Smith',
+      intakeFirstNameLabel: 'First name',
+      intakeFirstNamePlaceholder: 'e.g. Maya',
+      intakeEmailLabel: 'Email address',
+      intakeEmailPlaceholder: 'name@example.com',
+      intakeCityLabel: 'City',
+      intakeCityPlaceholder: 'e.g. London, Paris, Montreal…',
+      intakePrivacyNote:
+        'Saved locally on your device only — no account or external sharing.',
+      intakeStartBtn: 'Start Course',
+      intakeErrRequired: 'This field is required.',
+      intakeErrEmail: 'Please enter a valid email address.',
     },
     exercise: {
       labelPrefix: 'Exercise',

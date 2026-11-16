@@ -46,6 +46,12 @@ export function createInitialProgress(): UserProgress {
     history: [],
     xpHistoryByDay: { [today]: 0 },
     learnerName: 'Apprenant MARKETUP',
+    learnerProfile: {
+      lastName: '',
+      firstName: '',
+      email: '',
+      city: '',
+    },
     language: 'fr',
   };
 }
@@ -116,6 +122,24 @@ function sanitizeProgressCandidate(
       typeof safeObj.learnerName === 'string' && safeObj.learnerName.trim()
         ? safeObj.learnerName
         : base.learnerName,
+    learnerProfile: {
+      lastName:
+        typeof safeObj.learnerProfile?.lastName === 'string'
+          ? safeObj.learnerProfile.lastName
+          : '',
+      firstName:
+        typeof safeObj.learnerProfile?.firstName === 'string'
+          ? safeObj.learnerProfile.firstName
+          : '',
+      email:
+        typeof safeObj.learnerProfile?.email === 'string'
+          ? safeObj.learnerProfile.email
+          : '',
+      city:
+        typeof safeObj.learnerProfile?.city === 'string'
+          ? safeObj.learnerProfile.city
+          : '',
+    },
     lastVisitedDomainId: validDomain,
     lastVisitedLessonId:
       typeof safeObj.lastVisitedLessonId === 'string' && safeObj.lastVisitedLessonId

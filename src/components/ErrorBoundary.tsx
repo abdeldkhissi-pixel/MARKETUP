@@ -1,5 +1,6 @@
 import React from 'react';
-import { AlertTriangle, RotateCcw } from 'lucide-react';
+import { RotateCcw } from 'lucide-react';
+import { MarketupLogo } from './MarketupLogo';
 
 interface ErrorBoundaryState {
   hasError: boolean;
@@ -36,8 +37,8 @@ export class ErrorBoundary extends React.Component<
       return (
         <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-violet-50 via-slate-50 to-sky-50 p-6 text-slate-900">
           <div className="w-full max-w-md rounded-3xl border-2 border-violet-200 bg-white p-7 text-center shadow-sm">
-            <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-amber-100 text-amber-700">
-              <AlertTriangle className="h-6 w-6" />
+            <div className="mx-auto flex justify-center">
+              <MarketupLogo size="lg" className="shadow-sm" />
             </div>
             <h1 className="font-display mt-4 text-xl font-extrabold text-slate-950">
               MARKETUP · Récupération d&apos;affichage

@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import {
   ArrowRight,
   BookOpen,
-  Compass,
   Globe,
   Layers,
   ShieldCheck,
@@ -18,6 +17,7 @@ import {
 } from '../data/curriculum';
 import { UI_TEXT } from '../i18n/translations';
 import { Language, UserProgress } from '../types/marketup';
+import { MarketupLogo } from './MarketupLogo';
 import { MarkyCoach } from './MarkyCoach';
 
 interface HomeViewProps {
@@ -50,11 +50,9 @@ export const HomeView: React.FC<HomeViewProps> = ({
           <button
             type="button"
             onClick={onStartLearning}
-            className="flex items-center gap-1.5 font-display text-base font-extrabold tracking-tight text-violet-950 whitespace-nowrap shrink-0 sm:gap-2 sm:text-xl"
+            className="flex items-center gap-2 font-display text-base font-extrabold tracking-tight text-violet-950 whitespace-nowrap shrink-0 sm:gap-2.5 sm:text-xl"
           >
-            <span className="flex h-7 w-7 items-center justify-center rounded-xl bg-gradient-to-br from-violet-700 to-blue-600 text-amber-300 shadow-xs sm:h-8 sm:w-8">
-              <Compass className="h-4 w-4" />
-            </span>
+            <MarketupLogo className="h-7 w-7 shadow-xs sm:h-8 sm:w-8" />
             MARKETUP
           </button>
 
@@ -187,7 +185,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                 />
               ) : (
                 <div className="flex h-full min-h-[260px] flex-col items-center justify-center bg-gradient-to-br from-violet-800 via-blue-700 to-amber-500 p-8 text-center text-white">
-                  <Compass className="h-12 w-12 text-amber-300" />
+                  <MarketupLogo size="lg" className="shadow-md" />
                   <p className="font-display mt-3 text-xl font-bold">
                     MARKETUP · Learn Marketing by Playing
                   </p>
