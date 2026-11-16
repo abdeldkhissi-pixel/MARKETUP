@@ -84,6 +84,20 @@ function patchJava8SourceCompatibility() {
     );
     fs.writeFileSync(localServerPath, content, 'utf8');
   }
+
+  // 3) Convert Java 16 pattern matching instanceof in Bridge.java to standard Java 8 cast
+  const bridgePath = path.join(
+    destCapAndroid,
+    'src/main/java/com/getcapacitor/Bridge.java'
+  );
+  if (fs.existsSync(bridgePath)) {
+    let content = fs.readFileSync(bridgePath, 'utf8');
+    content = content.replace(
+      /if\s*\(\s*webView\s+instanceof\s+CapacitorWebView\s+capacitorWebView\s*\)\s*\{\s*capacitorWebView\.setBridge\(bridge\);\s*\}/g,
+      `if (webView instanceof CapacitorWebView) {\n                ((CapacitorWebView) webView).setBridge(bridge);\n            }`
+    );
+    fs.writeFileSync(bridgePath, content, 'utf8');
+  }
 }
 
 patchGradleCompatibility(path.join(destCapAndroid, 'build.gradle'));
